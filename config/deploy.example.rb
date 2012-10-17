@@ -14,6 +14,12 @@ load 'deploy/assets'
 set :application, "errbit"
 set :repository,  config['repository']
 
+unless config['rvm_ruby'].empty?
+  set :rvm_ruby_string, config['rvm_ruby']
+  
+  require "rvm/capistrano"
+end
+
 role :web, config['hosts']['web']
 role :app, config['hosts']['app']
 role :db,  config['hosts']['db'], :primary => true

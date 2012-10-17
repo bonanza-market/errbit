@@ -79,6 +79,8 @@ deployment:
   deploy_to: /var/www/apps/errbit
   # setup path to unicorn pids folder (or deploy_to/shared/pids will be used)
   # pids: /var/www/apps/errbit/shared/pids
+  # Configure a specific rvm ruby/gemset on the deploy target
+  #rvm_ruby: ruby-1.9.3-p194@errbit
 
 # GitHub OAuth configuration
 # If you want to allow authentication via GitHub, you will need to register
