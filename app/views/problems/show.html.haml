@@ -35,7 +35,7 @@
                   = gravatar_tag comment.user.email, :s => 24
                 %span.comment-info
                   = time_ago_in_words(comment.created_at, true) << " ago by "
-                  = link_to comment.user.email, comment.user
+                  = link_to comment.user.byname, comment.user
               - else
                 %span.comment-info
                   = time_ago_in_words(comment.created_at, true) << " ago by [Unknown User]"

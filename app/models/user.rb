@@ -48,6 +48,10 @@ class User
     validates_presence_of :username
   end
 
+  def byname
+    Errbit::Config.user_has_username ? username : name
+  end
+
   def watchers
     apps.map(&:watchers).flatten.select {|w| w.user_id.to_s == id.to_s}
   end
