@@ -32,10 +32,23 @@ class Fingerprint
     @file_or_message ||= unified_message + notice.backtrace.fingerprint
   end
 
-  # filter memory addresses out of object strings
-  # example: "#<Object:0x007fa2b33d9458>" becomes "#<Object>"
   def unified_message
-    notice.message.gsub(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)/, '\1\2')
+    notice.message.dup.tap do |message|
+      # filter memory addresses out of object strings
+      # example: "#<Object:0x007fa2b33d9458>" becomes "#<Object>"
+      message.gsub!(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)/, '\1\2')
+
+      # Remove SQL statements from ActiveRecord::StatementInvalid messages
+      if notice.error_class == 'ActiveRecord::StatementInvalid'
+        message.gsub!(/: (?:UPDATE|SELECT|DELETE) .+\Z/, '\1')
+      end
+      
+      # Remove unique record ids
+      # example: "Couldn't find ItemTrait with ID=13323979 for Item with ID=157989381" becomes "Couldn't find ItemTrait for Item"
+      if notice.error_class == 'ActiveRecord::RecordNotFound'
+        message.gsub!(/ with ID=\S+/, '')
+      end
+    end
   end
 
 end
