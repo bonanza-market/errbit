@@ -31,8 +31,22 @@ namespace :errbit do
       Err.create_indexes
       Err.all.each do |err|
         next if err.notices.count == 0 || err.app.nil?
-        fingerprint ||= ErrorReport.fingerprint_strategy.generate(err.notices.first, err.app.api_key)
-        err.update_attributes(:fingerprint => fingerprint)
+        
+        fingerprint = ErrorReport.fingerprint_strategy.generate(err.notices.first, err.app.api_key)
+        next if fingerprint == err.fingerprint
+
+        # Migrate notices to the new err and remove the old err
+        new_err = err.app.find_or_create_err!(
+          :error_class => err.error_class,
+          :environment => err.environment,
+          :fingerprint => fingerprint
+        )
+        
+        err.notices.each do |notice|
+          notice.update_attribute(:err_id => new_err.id)
+        end
+        
+        err.destroy
       end
     end
 
