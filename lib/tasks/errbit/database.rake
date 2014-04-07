@@ -37,13 +37,18 @@ namespace :errbit do
 
         # Migrate notices to the new err and remove the old err
         new_err = err.app.find_or_create_err!(
-          :error_class => err.error_class,
-          :environment => err.environment,
+          :error_class => err.problem.error_class,
+          :environment => err.problem.environment,
           :fingerprint => fingerprint
         )
         
         err.notices.each do |notice|
-          notice.update_attribute(:err_id => new_err.id)
+          notice.update_attribute(:err_id, new_err.id)
+        end
+
+        err.problem.update_attributes(:notices_count => err.problem.notices.count)
+        if err.problem.notices_count == 0
+          err.problem.destroy
         end
         
         err.destroy
