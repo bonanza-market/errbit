@@ -48,6 +48,9 @@ class Fingerprint
       if notice.error_class == 'ActiveRecord::RecordNotFound'
         message.gsub!(/ with ID=\S+/, '')
       end
+      
+      # Ignore any long number (PIDs, record IDs, etc)
+      message.gsub!(/\d{3,}/, '')
     end
   end
 
