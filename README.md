@@ -1,6 +1,6 @@
 # Errbit [![TravisCI][travis-img-url]][travis-ci-url] [![Code Climate][codeclimate-img-url]][codeclimate-url] [![Coveralls][coveralls-img-url]][coveralls-url] [![Dependency Status][gemnasium-img-url]][gemnasium-url]
 
-[travis-img-url]: https://secure.travis-ci.org/errbit/errbit.png?branch=master
+[travis-img-url]: https://travis-ci.org/errbit/errbit.svg?branch=master
 [travis-ci-url]: http://travis-ci.org/errbit/errbit
 [codeclimate-img-url]: https://codeclimate.com/github/errbit/errbit.png
 [codeclimate-url]: https://codeclimate.com/github/errbit/errbit
@@ -179,9 +179,6 @@ heroku config:add HEROKU=true
 heroku config:add SECRET_TOKEN="$(bundle exec rake secret)"
 heroku config:add ERRBIT_HOST=some-hostname.example.com
 heroku config:add ERRBIT_EMAIL_FROM=example@example.com
-# This next line is required to access env variables during asset compilation.
-# For more info, go to this link: https://devcenter.heroku.com/articles/labs-user-env-compile
-heroku labs:enable user-env-compile
 git push heroku master
 ```
 
@@ -609,8 +606,4 @@ Copyright
 ---------
 
 Copyright (c) 2010-2013 Errbit Team. See LICENSE for details.
-
-
-
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/errbit/errbit/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
