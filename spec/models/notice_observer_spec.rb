@@ -1,6 +1,4 @@
-require 'spec_helper'
-
-describe "Callback on Notice" do
+describe "Callback on Notice", type: 'model' do
   describe "email notifications (configured individually for each app)" do
     custom_thresholds = [2, 4, 8, 16, 32, 64]
 
@@ -16,14 +14,13 @@ describe "Callback on Notice" do
 
     custom_thresholds.each do |threshold|
       it "sends an email notification after #{threshold} notice(s)" do
-        @err.problem.stub(:notices_count).and_return(threshold)
+        allow(@err.problem).to receive(:notices_count).and_return(threshold)
         expect(Mailer).to receive(:err_notification).
           and_return(double('email', :deliver => true))
         Fabricate(:notice, :err => @err)
       end
     end
   end
-
 
   describe "email notifications for a resolved issue" do
     before do
