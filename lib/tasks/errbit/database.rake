@@ -10,6 +10,12 @@ namespace :errbit do
     puts "=== Cleared #{ResolvedProblemClearer.new.execute} resolved errors from the database."
   end
 
+  desc "Delete old errors from the database."
+  task :clear_old => :environment do
+    require 'old_problem_clearer'
+    puts "=== Cleared #{OldProblemClearer.new.execute} old errors from the database."
+  end
+
   desc "Regenerate fingerprints"
   task :notice_refingerprint => :environment do
     NoticeRefingerprinter.run
