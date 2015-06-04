@@ -23,6 +23,15 @@ class Api::V1::StatsController < ApplicationController
       :errors => problems_scope.count,
       :unresolved_errors => problems_scope.unresolved.count
     }
+    
+    if params[:detailed]
+      errs_scope = Err.where(:problem_id.in => @app.problems.pluck(:id))
+      notices_scope = Notice.where(:err_id.in => errs_scope.pluck(:id))
+      notices_scope = notices_scope.where(:created_at.gte => from.to_i) if from
+      notices_scope = notices_scope.where(:created_at.lte => to.to_i) if to
+      
+      stats[:notices] = notices_scope.count
+    end
 
     respond_to do |format|
       format.any(:html, :json) { render :json => JSON.dump(stats) } # render JSON if no extension specified on path
