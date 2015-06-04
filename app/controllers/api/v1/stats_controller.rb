@@ -6,15 +6,22 @@ class Api::V1::StatsController < ApplicationController
   before_action :require_api_key_or_authenticate_user!
 
   def app
-    if problem = @app.problems.order_by(:last_notice_at.desc).first
-      @last_error_time = problem.last_notice_at
+    from, to = params.values_at(:from, :to)
+    
+    problems_scope = @app.problems
+    problems_scope = problems_scope.where(:first_notice_at.gte => from.to_i) if from
+    problems_scope = problems_scope.where(:last_notice_at.lte => to.to_i) if to
+    
+    last_error_time = if problem = problems_scope.order_by(:last_notice_at.desc).first
+      problem.last_notice_at
     end
 
     stats = {
       :name => @app.name,
       :id => @app.id,
-      :last_error_time => @last_error_time,
-      :unresolved_errors => @app.unresolved_count
+      :last_error_time => last_error_time,
+      :errors => problems_scope.count,
+      :unresolved_errors => problems_scope.unresolved.count
     }
 
     respond_to do |format|
