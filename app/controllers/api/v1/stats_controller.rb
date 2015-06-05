@@ -10,7 +10,7 @@ class Api::V1::StatsController < ApplicationController
     
     problems_scope = @app.problems
     problems_scope = problems_scope.where(:first_notice_at.gte => from.to_i) if from
-    problems_scope = problems_scope.where(:last_notice_at.lte => to.to_i) if to
+    problems_scope = problems_scope.where(:first_notice_at.lte => to.to_i) if to
     
     last_error_time = if problem = problems_scope.order_by(:last_notice_at.desc).first
       problem.last_notice_at
