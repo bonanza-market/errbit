@@ -25,7 +25,9 @@ class Api::V1::StatsController < ApplicationController
     }
     
     if params[:detailed]
-      errs_scope = Err.where(:problem_id.in => @app.problems.pluck(:id))
+      problems_scope = @app.problems
+      problems_scope = problems_scope.where(:last_notice_at.gte => from.to_i) if from
+      errs_scope = Err.where(:problem_id.in => problems_scope.pluck(:id))
       notices_scope = Notice.where(:err_id.in => errs_scope.pluck(:id))
       notices_scope = notices_scope.where(:created_at.gte => from.to_i) if from
       notices_scope = notices_scope.where(:created_at.lte => to.to_i) if to
