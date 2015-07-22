@@ -32,7 +32,7 @@ class Api::V1::ProblemsController < ApplicationController
     end
 
     results = benchmark("[api/v1/problems_controller/index] query time") do
-      problems_scope.where(query).with(:consistency => :strong).only(FIELDS).to_a
+      problems_scope.where(query).with(:consistency => :strong).only(FIELDS).page(params[:page]).per(20).to_a
     end
 
     respond_to do |format|
