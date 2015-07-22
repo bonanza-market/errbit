@@ -31,6 +31,28 @@ class Api::V1::ProblemsController < ApplicationController
       query = {:first_notice_at=>{"$lte"=>end_date}, "$or"=>[{:resolved_at=>nil}, {:resolved_at=>{"$gte"=>start_date}}]}
     end
 
+    if params.key?(:started_after)
+      started_after_query = { "$gt" => Time.parse(params[:started_after]).utc }
+      if query[:first_notice_at]
+        query["$and"] = (Array.wrap(query.delete(:first_notice_at)) + [ started_after_query ]).map do |first_notice_at_query|
+          { first_notice_at: first_notice_at_query }
+        end
+      else
+        query[:first_notice_at] = started_after_query
+      end
+    end
+
+    if params.key?(:started_before)
+      started_before_query = { "$lt" => Time.parse(params[:started_before]).utc }
+      if query[:first_notice_at]
+        query["$and"] = (Array.wrap(query.delete(:first_notice_at)) + [ started_before_query ]).map do |first_notice_at_query|
+          { first_notice_at: first_notice_at_query }
+        end
+      else
+        query[:first_notice_at] = started_before_query
+      end
+    end
+
     results = benchmark("[api/v1/problems_controller/index] query time") do
       problems_scope.where(query).with(:consistency => :strong).only(FIELDS).page(params[:page]).per(20).to_a
     end
