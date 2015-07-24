@@ -44,7 +44,7 @@ describe ProblemUpdaterCache do
 
         it 'update stats hosts' do
           expect(problem.hosts).to eq({
-            Digest::MD5.hexdigest(notice.host) => {'value' => notice.host, 'count' => 1}
+            Digest::MD5.hexdigest(notice.hostname) => {'value' => notice.hostname, 'count' => 1}
           })
         end
 
@@ -83,7 +83,7 @@ describe ProblemUpdaterCache do
 
         it 'update stats hosts' do
           expect(problem.hosts).to eq({
-            Digest::MD5.hexdigest(notice.host) => {'value' => notice.host, 'count' => 3}
+            Digest::MD5.hexdigest(notice.hostname) => {'value' => notice.hostname, 'count' => 3}
           })
         end
 
@@ -131,7 +131,7 @@ describe ProblemUpdaterCache do
 
       it 'inc stats hosts' do
         expect(problem.hosts).to eq({
-          Digest::MD5.hexdigest(notice.host) => {'value' => notice.host, 'count' => 2}
+          Digest::MD5.hexdigest(notice.hostname) => {'value' => notice.hostname, 'count' => 2}
         })
       end
 

@@ -6,7 +6,7 @@ class CacheProblemStatisticsFix < Mongoid::Migration
       user_agents = {}
       problem.notices.each do |notice|
       	messages    = count_attribute(messages, notice.message)
-        hosts       = count_attribute(hosts, notice.host)
+        hosts       = count_attribute(hosts, notice.hostname)
         user_agents = count_attribute(user_agents, notice.user_agent_string)
       end
       problem.update_attributes(:messages => messages, :hosts => hosts, :user_agents => user_agents)

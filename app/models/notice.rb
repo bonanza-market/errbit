@@ -74,6 +74,10 @@ class Notice
   def url
     request['url']
   end
+  
+  def hostname
+    server_environment && server_environment["hostname"] || host
+  end
 
   def host
     uri = url && URI.parse(url)

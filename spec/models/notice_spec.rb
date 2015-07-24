@@ -99,6 +99,13 @@ describe Notice, type: 'model' do
     end
   end
 
+  describe "hostname" do
+    it "returns hostname from server_environment" do
+      notice = Fabricate.build(:notice, :server_environment => {'hostname' => "server1.example.com"})
+      expect(notice.hostname).to eq 'server1.example.com'
+    end
+  end
+
   describe "request" do
     it "returns empty hash if not set" do
       notice = Notice.new
