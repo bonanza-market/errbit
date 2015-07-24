@@ -39,7 +39,7 @@ class ProblemUpdaterCache
     notice ||= @notice || first_notice
 
     attrs = {}
-    attrs[:first_notice_at] = first_notice.created_at if first_notice
+    attrs[:first_notice_at] = [ problem.first_notice_at, first_notice.created_at ].compact.min if first_notice
     attrs[:last_notice_at] = last_notice.created_at if last_notice
     attrs.merge!(
       :message     => notice.message,
