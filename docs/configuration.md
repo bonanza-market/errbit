@@ -5,7 +5,7 @@ Errbit takes all of its configuration from environment variables. You can use
 to fill in any values that you can't or won't supply through the environment.
 
 In order of precedence Errbit uses:
-1. Environment variables (for example MY_VALUE=abc bundle exec unicorn)
+1. Environment variables (for example MY_VALUE=abc bundle exec puma)
 2. Values provided in a .env file
 3. Default values from .env.default
 
@@ -56,11 +56,14 @@ In order of precedence Errbit uses:
 <dd>For production environments, you should run `rake secret` to generate a secret, unique key for this parameter
 <dd>defaults to f258ed69266dc8ad0ca79363c3d2f945c388a9c5920fc9a1ae99a98fbb619f135001c6434849b625884a9405a60cd3d50fc3e3b07ecd38cbed7406a4fccdb59c
 <dt>MONGO_URL
-<dd>URL connection string for mongo in the form mongodb://username:password@example.com:port To more easily set up connections to third party mongo providers, you can call this value MONGOLAB_URI, MONGOHQ_URL, MONGODB_URL or MONGO_URL
+<dd>URL connection string for mongo in the form mongodb://username:password@example.com:port To more easily set up connections to third party mongo providers, you can call this value MONGODB_URI, MONGOLAB_URI, MONGOHQ_URL, MONGODB_URL or MONGO_URL
 <dd>defaults to mongodb://localhost/errbit_&lt;Rails.env&gt;
 <dt>GITHUB_URL
 <dd>Use this URL for interacting github. This is useful if you have a github enterprise account and you're using a URL other than https://github.com
 <dd>defaults to https://github.com
+<dt>GITHUB_API_URL</dt>
+<dd>For github enterprise accounts, the API URL could be something like https://github.example.com/api/v3</dd>
+<dd>defaults to https://api.github.com</dd>
 <dt>GITHUB_AUTHENTICATION
 <dd>Allow github sign-in via OAuth
 <dd>defaults to true
@@ -73,6 +76,19 @@ In order of precedence Errbit uses:
 <dt>GITHUB_ACCESS_SCOPE
 <dd>OAuth scope to request from users when they sign-in through github
 <dd>defaults to [repo]
+<dt>GITHUB_SITE_TITLE</dt>
+<dd>The title to use for GitHub. This value is whatever you want displayed in the Errbit UI when referring to GitHub.</dd>
+<dd>defaults to GitHub</dd>
+<dt>GOOGLE_AUTHENTICATION
+<dd>Allow google sign-in via OAuth
+<dd>defaults to true
+<dt>GOOGLE_CLIENT_ID
+<dd>Client id of your google application
+<dt>GOOGLE_SECRET
+<dd>Secret key for your google application
+<dt>GOOGLE_SITE_TITLE</dt>
+<dd>The title to use for Google. This value is whatever you want displayed in the Errbit UI when referring to Google.</dd>
+<dd>defaults to Google</dd>
 <dt>EMAIL_DELIVERY_METHOD
 <dd>:smtp or :sendmail, depending on how you want Errbit to send email
 <dt>SMTP_SERVER
