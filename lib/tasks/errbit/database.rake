@@ -1,5 +1,3 @@
-require 'digest/sha1'
-
 namespace :errbit do
   namespace :db do
 
@@ -60,22 +58,33 @@ namespace :errbit do
         err.destroy
       end
     end
+  end
 
-    desc "Remove notices in batch"
-    task :notices_delete, [ :problem_id ] => [ :environment ] do
-      BATCH_SIZE = 1000
-      if args[:problem_id]
-        item_count = Problem.find(args[:problem_id]).notices.count
-        removed_count = 0
-        puts "Notices to remove: #{item_count}"
-        while item_count > 0
-          Problem.find(args[:problem_id]).notices.limit(BATCH_SIZE).each do |notice|
-            notice.remove
-            removed_count += 1
-          end
-          item_count -= BATCH_SIZE
-          puts "Removed #{removed_count} notices"
+  desc "Updates cached attributes on Problem"
+  task problem_recache: :environment do
+    ProblemRecacher.run
+  end
+
+  desc "Regenerate fingerprints"
+  task notice_refingerprint: :environment do
+    NoticeRefingerprinter.run
+    ProblemRecacher.run
+  end
+
+  desc "Remove notices in batch"
+  task :notices_delete, [:problem_id] => [:environment] do
+    BATCH_SIZE = 1000
+    if args[:problem_id]
+      item_count = Problem.find(args[:problem_id]).notices.count
+      removed_count = 0
+      puts "Notices to remove: #{item_count}"
+      while item_count > 0
+        Problem.find(args[:problem_id]).notices.limit(BATCH_SIZE).each do |notice|
+          notice.remove
+          removed_count += 1
         end
+        item_count -= BATCH_SIZE
+        puts "Removed #{removed_count} notices"
       end
     end
   end

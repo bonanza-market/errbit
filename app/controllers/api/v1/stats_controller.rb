@@ -36,8 +36,8 @@ class Api::V1::StatsController < ApplicationController
     end
 
     respond_to do |format|
-      format.any(:html, :json) { render :json => JSON.dump(stats) } # render JSON if no extension specified on path
-      format.xml  { render :xml  => stats }
+      format.any(:html, :json) { render json: JSON.dump(stats) } # render JSON if no extension specified on path
+      format.xml { render xml: stats }
     end
   end
 end
