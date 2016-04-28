@@ -76,7 +76,7 @@ class Problem
   def self.cache_notice(id, notice)
     # increment notice count
     message_digest = Digest::MD5.hexdigest(notice.message)
-    host_digest = Digest::MD5.hexdigest(notice.host)
+    host_digest = Digest::MD5.hexdigest(notice.hostname)
     user_agent_digest = Digest::MD5.hexdigest(notice.user_agent_string)
 
     Problem.where('_id' => id).find_one_and_update({
