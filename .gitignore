@@ -5,9 +5,8 @@ log/*.log
 tmp/**/*
 tmp/*
 config/config.yml
-config/deploy.rb
-config/deploy
 config/mongoid.yml
+config/deploy
 config/newrelic.yml
 .rvmrc
 .idea
