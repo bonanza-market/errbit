@@ -24,7 +24,10 @@ class NoticeFingerprinter
     if backtrace_lines < 0
       material << backtrace.lines
     else
-      material << backtrace.lines.slice(0, backtrace_lines)
+      material << backtrace.
+        lines.
+        select { |line| line.with_indifferent_access["file"].to_s.start_with?("[PROJECT_ROOT]") }.
+        slice(0, backtrace_lines)
     end
 
     Digest::MD5.hexdigest(material.map(&:to_s).join)
