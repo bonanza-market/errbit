@@ -163,4 +163,16 @@ describe Notice, type: 'model' do
       expect(notice.env_vars).to eq({})
     end
   end
+
+  describe "filtered message" do
+    it "will strip out the memory address" do
+      notice = Notice.new(message: "#<Object:0x007fa2b33d9458>")
+      expect(notice.filtered_message).to eq("#<Object>")
+    end
+
+    it  "will strip out the memory address for anonymous classes" do
+      notice = Notice.new(message: "#<#<Class:0x00000017db6318>:0x007fe04db74168>")
+      expect(notice.filtered_message).to eq("#<#<Class>>")
+    end
+  end
 end

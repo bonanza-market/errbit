@@ -129,7 +129,7 @@ class Notice
   # filter memory addresses out of object strings
   # example: "#<Object:0x007fa2b33d9458>" becomes "#<Object>"
   def filtered_message
-    message.gsub(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)/, '\1\2')
+    message.gsub(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)[^>]*/, '\1\2')
   end
 
 protected
