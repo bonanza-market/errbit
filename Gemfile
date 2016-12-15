@@ -9,7 +9,7 @@ gem 'actionpack', RAILS_VERSION
 gem 'railties', RAILS_VERSION
 
 gem 'actionmailer_inline_css'
-gem 'decent_exposure'
+gem 'decent_exposure', '~> 2.3.3'
 gem 'devise', '~> 3.5.5'
 gem 'dotenv-rails'
 gem 'draper'
