@@ -7,7 +7,7 @@
 # to ./docs/deployment/capistrano.md for more info
 
 # config valid only for current version of Capistrano
-lock '3.6.0'
+lock '3.7.0'
 
 set :application, 'errbit'
 set :repo_url, 'https://github.com/bonanza-market/errbit.git'
