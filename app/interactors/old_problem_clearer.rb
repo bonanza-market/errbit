@@ -1,19 +1,22 @@
 require 'problem_destroy'
 
 class OldProblemClearer
+  def initialize(should_repair_database = false)
+    @should_repair_database = should_repair_database
+  end
 
   ##
   # Clear all problems that haven't received a notice in the last month
   #
   def execute
-    nb_problem_resolved.tap { |nb|
+    nb_problem_resolved.tap do |nb|
       if nb > 0
         criteria.each do |problem|
           ProblemDestroy.new(problem).execute
         end
-        repair_database
+        repair_database if @should_repair_database
       end
-    }
+    end
   end
 
   private
