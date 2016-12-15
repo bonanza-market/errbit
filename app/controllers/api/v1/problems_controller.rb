@@ -7,7 +7,7 @@ class Api::V1::ProblemsController < ApplicationController
   FIELDS = %w{_id app_id app_name environment hosts message where first_notice_at last_notice_at resolved resolved_at notices_count}
 
   def show
-    result = benchmark("[api/v1/problems_controller/show] query time") do
+    problem = benchmark("[api/v1/problems_controller/show] query time") do
       begin
         problems_scope.only(FIELDS).find(params[:id])
       rescue Mongoid::Errors::DocumentNotFound
@@ -16,9 +16,15 @@ class Api::V1::ProblemsController < ApplicationController
       end
     end
 
+    attributes = problem.attributes
+
+    if (err = problem.errs.last) && (notice = err.notices.last) && (backtrace = notice.backtrace)
+      attributes["backtrace"] = backtrace.lines
+    end
+
     respond_to do |format|
-      format.any(:html, :json) { render json: result } # render JSON if no extension specified on path
-      format.xml { render xml: result }
+      format.any(:html, :json) { render json: attributes } # render JSON if no extension specified on path
+      format.xml { render xml: attributes }
     end
   end
 
