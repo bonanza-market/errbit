@@ -2,7 +2,7 @@ class BacktraceLineDecorator < Draper::Decorator
   EMPTY_STRING = ''.freeze
 
   def in_app?
-    object[:file].to_s.match Backtrace::IN_APP_PATH
+    file.match Backtrace::IN_APP_PATH
   end
 
   def number
@@ -14,7 +14,7 @@ class BacktraceLineDecorator < Draper::Decorator
   end
 
   def file
-    object[:file]
+    object[:file].to_s
   end
 
   def method
@@ -40,7 +40,7 @@ class BacktraceLineDecorator < Draper::Decorator
   end
 
   def path
-    File.dirname(object[:file]).gsub(/^\.$/, '') + "/"
+    File.dirname(file).gsub(/^\.$/, '') + "/"
   end
 
   def decorated_path
