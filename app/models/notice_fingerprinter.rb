@@ -26,6 +26,7 @@ class NoticeFingerprinter
     else
       material << backtrace.
         lines.
+        compact.
         map { |line| line.with_indifferent_access["file"].to_s }.
         select { |line| line.start_with?("[PROJECT_ROOT]") }.
         slice(0, backtrace_lines)
