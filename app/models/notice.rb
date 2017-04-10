@@ -134,7 +134,13 @@ class Notice
       # filter IDs from common rails exceptions:
       # example: "Couldn't find SomeModel with ID=274594056 for SomeOtherModel with ID=458060932"
       # becomes: "Couldn't find SomeModel with ID=[ID] for SomeOtherModel with ID=[ID]"
-      gsub(/\bID=\d+/, 'ID=[ID]')
+      gsub(/\bID=\d+/, 'ID=[ID]').
+      # example: "Mysql2::Error: Duplicate entry '283215168' for key 'index_some_table_on_something"
+      # becomes: "Mysql2::Error: Duplicate entry '[ID]' for key 'index_some_table_on_something"
+      sub(/\A(Mysql2::Error: Duplicate entry ')[\d-]+(' for key)/, '\1[ID]\2').
+      # example: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 1 WHERE `some_table`.`id` = 1"
+      # becomes: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE [QUERY]"
+      sub(/\A(Mysql2::Error: .+: [A-Z]+ `).+\Z/, '\1[QUERY]')
   end
 
 protected

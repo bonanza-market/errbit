@@ -71,5 +71,27 @@ describe NoticeFingerprinter, type: 'model' do
         expect(f1).to eq(f2)
       end
     end
+
+    context 'two Mysql2::Error notices differing only by a duplicate entry ID in the message' do
+      let(:notice1) { Fabricate(:notice, message: "Mysql2::Error: Duplicate entry '1' for key 'index_some_table_on_something") }
+      let(:notice2) { Fabricate(:notice, message: "Mysql2::Error: Duplicate entry '2' for key 'index_some_table_on_something") }
+
+      it 'has the same fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to eq(f2)
+      end
+    end
+
+    context 'two Mysql2::Error notices differing only by the content of a query' do
+      let(:notice1) { Fabricate(:notice, message: 'Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 1 WHERE `some_table`.`id` = 1') }
+      let(:notice2) { Fabricate(:notice, message: 'Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 2 WHERE `some_table`.`id` = 2') }
+
+      it 'has the same fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to eq(f2)
+      end
+    end
   end
 end
