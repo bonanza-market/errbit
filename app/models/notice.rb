@@ -126,10 +126,15 @@ class Notice
     server_environment['app-version'] || '' if server_environment
   end
 
-  # filter memory addresses out of object strings
-  # example: "#<Object:0x007fa2b33d9458>" becomes "#<Object>"
   def filtered_message
-    message.gsub(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)[^>]*/, '\1\2')
+    message.
+      # filter memory addresses out of object strings
+      # example: "#<Object:0x007fa2b33d9458>" becomes "#<Object>"
+      gsub(/(#<.+?):[0-9a-f]x[0-9a-f]+(>)[^>]*/, '\1\2').
+      # filter IDs from common rails exceptions:
+      # example: "Couldn't find SomeModel with ID=274594056 for SomeOtherModel with ID=458060932"
+      # becomes: "Couldn't find SomeModel with ID=[ID] for SomeOtherModel with ID=[ID]"
+      gsub(/\bID=\d+/, 'ID=[ID]')
   end
 
 protected
