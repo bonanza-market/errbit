@@ -140,7 +140,7 @@ class Notice
       sub(/\A(Mysql2::Error: Duplicate entry ')[\d-]+(' for key)/, '\1[ID]\2').
       # example: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 1 WHERE `some_table`.`id` = 1"
       # becomes: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE [QUERY]"
-      sub(/\A(Mysql2::Error: .+: [A-Z]+ `).+\Z/, '\1[QUERY]')
+      sub(/\A(Mysql2::Error: .+: [A-Z]+ ).+\Z/, '\1[QUERY]')
   end
 
 protected
