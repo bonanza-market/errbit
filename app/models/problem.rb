@@ -30,6 +30,7 @@ class Problem
   field :messages,    type: Hash, default: {}
   field :hosts,       type: Hash, default: {}
   field :comments_count, type: Integer, default: 0
+  field :rails_uuids, type: Array, default: []
 
   index app_id: 1
   index app_name: 1
@@ -44,7 +45,8 @@ class Problem
     where:       "text",
     message:     "text",
     app_name:    "text",
-    environment: "text"
+    environment: "text",
+    rails_uuids: "text"
   }, default_language: "english")
 
   belongs_to :app
@@ -97,6 +99,9 @@ class Problem
         "messages.#{message_digest}.count"       => 1,
         "hosts.#{host_digest}.count"             => 1,
         "user_agents.#{user_agent_digest}.count" => 1
+      },
+      '$addToSet' => {
+        'rails_uuids' => notice.request.try(:[], "cgi-data").try(:[], "rails_uuid")
       }
     }, return_document: :after)
   end
