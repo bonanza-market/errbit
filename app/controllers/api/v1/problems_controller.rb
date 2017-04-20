@@ -21,6 +21,7 @@ class Api::V1::ProblemsController < ApplicationController
     if (err = problem.errs.last) && (notice = err.notices.last) && (backtrace = notice.backtrace)
       attributes["backtrace"] = backtrace.lines
     end
+    attributes.merge!(comments: problem.comments.map(&:_id))
 
     respond_to do |format|
       format.any(:html, :json) { render json: attributes } # render JSON if no extension specified on path
