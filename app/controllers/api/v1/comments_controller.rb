@@ -10,7 +10,7 @@ class Api::V1::CommentsController < ApplicationController
   def show
     comment = benchmark("[api/v1/comments_controller/show] query time") do
       begin
-        comments_scope.only(FIELDS).find(params[:id])
+        Comment.only(FIELDS).find(params[:id])
       rescue Mongoid::Errors::DocumentNotFound
         head :not_found
         return false
@@ -38,19 +38,19 @@ class Api::V1::CommentsController < ApplicationController
             problem.comments << @comment
             response[:success] = problem.save
             unless response[:success]
-              response[:message] = "invalid problem"
+              response[:message] = "failed to save problem"
             end
           else
-            response[:message] = "invalid problem id"
+            response[:message] = "no problem"
           end
         else
           response[:message] = "invalid comment"
         end
       else
-        response[:message] = "no problem id"
+        response[:message] = "no problem_id"
       end
     else
-      response[:message] = "not logged in"
+      response[:message] = "no current_user"
     end
 
     respond_to do |format|
@@ -72,18 +72,5 @@ private
       token = Devise.friendly_token
       break token unless User.where(authentication_token: token).first
     end
-  end
-
-  def ensure_errbot_user
-    errbot = User.where(name: "Errbot").last
-    unless errbot
-      errbot = User.new
-      errbot.name = "Errbot"
-      errbot.email = "programmers@bonanza.com"
-      errbot.password = "?????????????" # FIXME: before merging
-      errbot.authentication_token = generate_authentication_token
-      errbot.save!
-    end
-    errbot
   end
 end
