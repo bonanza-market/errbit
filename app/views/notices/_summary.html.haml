@@ -5,8 +5,8 @@
       %td.main.nowrap= message_graph(problem)
     %tr
       %th Error Class
-      %td= "notice.error_class"
-    - if false #notice.request['url'].present?
+      %td= notice.error_class
+    - if notice.request['url'].present?
       %tr
         %th URL
         %td.nowrap= link_to notice.request['url'], notice.request['url']
@@ -15,10 +15,10 @@
         %td= notice.to_curl
     %tr
       %th Where
-      %td= "notice.where"
+      %td= notice.where
     %tr
       %th Occurred
-      %td= "notice.created_at.to_s(:precise)"
+      %td= notice.created_at.to_s(:precise)
     %tr
       %th Similar
       %td= problem.notices_count - 1
@@ -28,19 +28,19 @@
     %tr
       %th Tenant
       %td= tenant_graph(problem)
-    - if false #notice.server_environment && notice.server_environment["hostname"]
+    - if notice.server_environment && notice.server_environment["hostname"]
       %tr
         %th App Server
-        %td= 'notice.server_environment && notice.server_environment["hostname"]'
-    - if "notice.app_version.present?"
+        %td= notice.server_environment && notice.server_environment["hostname"]
+    - if notice.app_version.present?
       %tr
         %th App Version
-        %td= "notice.app_version"
-    - if "notice.framework"
+        %td= notice.app_version
+    - if notice.framework
       %tr
         %th Framework
-        %td= "notice.framework"
+        %td= notice.framework
     %tr
       %th Rel. Directory
-      %td= 'notice.server_environment && notice.server_environment["project-root"]'
+      %td= notice.server_environment && notice.server_environment["project-root"]
 
