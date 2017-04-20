@@ -1,9 +1,8 @@
 class Api::V1::CommentsController < ApplicationController
   respond_to :json, :xml
 
-  before_action :find_problem
-  skip_before_action :authenticate_user!, only: :create
-  before_action :require_api_key_or_authenticate_user!, only: :create
+  skip_before_action :authenticate_user!
+  before_action :require_api_key_or_authenticate_user!
 
   FIELDS = %w{_id created_at updated_at body err_id user_id}
 
@@ -26,10 +25,11 @@ class Api::V1::CommentsController < ApplicationController
   def create
     response = { success: false }
 
-    if current_user
-      if params[:problem_id]
+    if params[:problem_id]
+      errbot = User.where(name: "Errbot").last
+      if errbot
         @comment = Comment.new
-        @comment[:user_id] = current_user.id
+        @comment[:user_id] = errbot.id
         params.each { |k, v| @comment[k] = v }
 
         if @comment.valid?
@@ -50,27 +50,12 @@ class Api::V1::CommentsController < ApplicationController
         response[:message] = "no problem_id"
       end
     else
-      response[:message] = "no current_user"
+      response[:message] = "no errbot user"
     end
 
     respond_to do |format|
       format.any(:html, :json) { render json: response }
       format.xml { render xml: response }
-    end
-  end
-
-protected
-
-  def find_problem
-    @problem = Problem.where(comment: @comment).last
-  end
-
-private
-
-  def generate_authentication_token
-    loop do
-      token = Devise.friendly_token
-      break token unless User.where(authentication_token: token).first
     end
   end
 end
