@@ -22,6 +22,17 @@ class Api::V1::CommentsController < ApplicationController
     end
   end
 
+  def index
+    comments = benchmark("[api/v1/comments_controller/index] query time") do
+      comments_scope.only(FIELDS).page(params[:page]).per(20).to_a
+    end
+
+    respond_to do |format|
+      format.any(:html, :json) { render json: JSON.dump(comments) } # render JSON if no extension specified on path
+      format.xml { render xml: comments }
+    end
+  end
+
   def create
     response = { success: false }
 
@@ -57,5 +68,11 @@ class Api::V1::CommentsController < ApplicationController
       format.any(:html, :json) { render json: response }
       format.xml { render xml: response }
     end
+  end
+
+  private
+
+  def comments_scope
+    params[:problem_id] && @app && @app.problems.where(id: params[:problem_id]).last.comments || Comment
   end
 end
