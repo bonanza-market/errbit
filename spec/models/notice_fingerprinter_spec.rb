@@ -72,6 +72,39 @@ describe NoticeFingerprinter, type: 'model' do
       end
     end
 
+    context 'two notices differing only by a long number at the start the message' do
+      let(:notice1) { Fabricate(:notice, message: "8600002000 is out of range for ActiveMo[Truncated]") }
+      let(:notice2) { Fabricate(:notice, message: "8800000000 is out of range for ActiveMo[Truncated]") }
+
+      it 'has the same fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to eq(f2)
+      end
+    end
+
+    context 'two notices differing only by a long number in the message' do
+      let(:notice1) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=511&per_page=48":String)) }
+      let(:notice2) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=434&per_page=48":String)) }
+
+      it 'has the same fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to eq(f2)
+      end
+    end
+
+    context 'two notices differing only by a short number in the message' do
+      let(:notice1) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=11&per_page=48":String)) }
+      let(:notice2) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=34&per_page=48":String)) }
+
+      it 'has a different fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to_not eq(f2)
+      end
+    end
+
     context 'two Mysql2::Error notices differing only by a duplicate entry ID in the message' do
       let(:notice1) { Fabricate(:notice, message: "Mysql2::Error: Duplicate entry '1' for key 'index_some_table_on_something") }
       let(:notice2) { Fabricate(:notice, message: "Mysql2::Error: Duplicate entry '2' for key 'index_some_table_on_something") }
