@@ -24,7 +24,12 @@ class Api::V1::CommentsController < ApplicationController
 
   def index
     comments = benchmark("[api/v1/comments_controller/index] query time") do
-      comments_scope.only(FIELDS).page(params[:page]).per(20).to_a
+      begin
+        comments_scope.only(FIELDS).page(params[:page]).per(20).to_a
+      rescue Mongoid::Errors::DocumentNotFound
+        head :not_found
+        return false
+      end
     end
 
     respond_to do |format|
@@ -72,7 +77,8 @@ class Api::V1::CommentsController < ApplicationController
 
   private
 
+  # @raise [Mongoid::Errors::DocumentNotFound] if problem_id is present but invalid
   def comments_scope
-    params[:problem_id] && @app && @app.problems.where(id: params[:problem_id]).last.comments || Comment
+    params[:problem_id] && @app && @app.problems.find(params[:problem_id]).comments || Comment
   end
 end
