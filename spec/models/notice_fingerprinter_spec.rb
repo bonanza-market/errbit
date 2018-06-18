@@ -93,8 +93,8 @@ describe NoticeFingerprinter, type: 'model' do
     end
 
     context 'two notices differing only by a long number in the message' do
-      let(:notice1) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=511&per_page=48":String)) }
-      let(:notice2) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=434&per_page=48":String)) }
+      let(:notice1) { Fabricate(:notice, message: %(something happened for "custom_category_id=511&per_page=48":String)) }
+      let(:notice2) { Fabricate(:notice, message: %(something happened for "custom_category_id=434&per_page=48":String)) }
 
       it 'has the same fingerprint' do
         f1 = fingerprinter.generate('123', notice1, backtrace)
@@ -104,8 +104,8 @@ describe NoticeFingerprinter, type: 'model' do
     end
 
     context 'two notices differing only by a short number in the message' do
-      let(:notice1) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=11&per_page=48":String)) }
-      let(:notice2) { Fabricate(:notice, message: %(undefined method `stringify_keys' for "custom_category_id=34&per_page=48":String)) }
+      let(:notice1) { Fabricate(:notice, message: %(something happened for "custom_category_id=11&per_page=48":String)) }
+      let(:notice2) { Fabricate(:notice, message: %(something happened for "custom_category_id=34&per_page=48":String)) }
 
       it 'has a different fingerprint' do
         f1 = fingerprinter.generate('123', notice1, backtrace)
@@ -128,6 +128,17 @@ describe NoticeFingerprinter, type: 'model' do
     context 'two Mysql2::Error notices differing only by the content of a query' do
       let(:notice1) { Fabricate(:notice, message: 'Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 1 WHERE `some_table`.`id` = 1') }
       let(:notice2) { Fabricate(:notice, message: 'Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 2 WHERE `some_table`.`id` = 2') }
+
+      it 'has the same fingerprint' do
+        f1 = fingerprinter.generate('123', notice1, backtrace)
+        f2 = fingerprinter.generate('123', notice2, backtrace)
+        expect(f1).to eq(f2)
+      end
+    end
+
+    context 'two NoMethodError notices differing only by the inspected value' do
+      let(:notice1) { Fabricate(:notice, message: "undefined method `beginnning_of_day' for Wed, 13 Jun 2018 01:15:14 PDT -07:00:Time") }
+      let(:notice2) { Fabricate(:notice, message: "undefined method `beginnning_of_day' for Wed, 13 Jun 2018 02:15:14 PDT -07:00:Time") }
 
       it 'has the same fingerprint' do
         f1 = fingerprinter.generate('123', notice1, backtrace)

@@ -130,6 +130,10 @@ class Notice
       # example: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE `some_table` SET `some_value` = 1 WHERE `some_table`.`id` = 1"
       # becomes: "Mysql2::Error: Timeout waiting for a response from the last query. (waited 15 seconds): UPDATE [QUERY]"
       sub(/\A(Mysql2::Error: .+: [A-Z]+ ).+\Z/, '\1[QUERY]').
+      # Filter inspected value from undefined method X for Y:Klass exceptions
+      # example: "undefined method `beginnning_of_day' for Wed, 13 Jun 2018 01:15:14 PDT -07:00:Time"
+      # becomes: "undefined method `beginnning_of_day' for [INSTANCE]:Time"
+      sub(/(undefined method `.+' for ).+(:\w+)$/, '\1[INSTANCE]\2').
       # At this point, any relatively long number is probably not a useful signal for grouping
       gsub(/\d{3,}/, '[NUM]')
   end
