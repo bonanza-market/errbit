@@ -27,6 +27,7 @@ require 'xmpp4r'
 require 'xmpp4r/muc'
 require 'mongoid-rspec'
 require 'fabrication'
+require 'sucker_punch/testing/inline'
 require 'errbit_plugin/mock_issue_tracker'
 
 # Requires supporting files with custom matchers and macros, etc,
@@ -37,7 +38,7 @@ Mongoid::Tasks::Database.create_indexes
 ActionMailer::Base.delivery_method = :test
 
 RSpec.configure do |config|
-  config.include Devise::TestHelpers, type: :controller
+  config.include Devise::Test::ControllerHelpers, type: :controller
   config.include Mongoid::Matchers, type: :model
   config.alias_example_to :fit, focused: true
 

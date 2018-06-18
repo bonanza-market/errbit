@@ -92,6 +92,8 @@ a.action  { float: right; font-size: 0.9em;}
   color: #ccc;
   padding: 0 14px;
   line-height: 30px;
+  height: 30px;
+  display: inline-block;
 }
 #header #session-links #sign-out i {
   color: #cc0033;
@@ -143,6 +145,8 @@ a.action  { float: right; font-size: 0.9em;}
   font-size: 14px;
   font-weight: bold;
   line-height: 37px;
+  height: 37px;
+  display: inline-block;
   text-decoration: none;
   text-shadow: 1px 1px 0px #FFF;
   -webkit-text-shadow: 1px 1px 0px #FFF;
@@ -216,9 +220,15 @@ a.action  { float: right; font-size: 0.9em;}
 #action-bar span a {
   color: #666;
   padding: 0 20px;
-  font-size: 14px; font-weight: bold; line-height: 39px; text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: 39px;
+  height: 39px;
+  display: inline-block;
+  text-decoration: none;
   text-shadow: 1px 1px 0px #FFF; -webkit-text-shadow: 1px 1px 0px #FFF;
   background: transparent 10px 8px no-repeat;
+  white-space: nowrap;
 }
 #action-bar a:hover { text-decoration: none;}
 #action-bar span:hover {
@@ -643,7 +653,7 @@ td.message .line {
 td.latest {
   white-space: nowrap;
 }
-td.count, td.issue_link {
+td.count .td-container, td.issue_link .td-container, td.resolve .td-container {
   text-align: center;
 }
 
@@ -674,30 +684,40 @@ td.count, td.issue_link {
 }
 
 /* Err Tables */
-table.errs td.app .name {
-  display: block;
-  width: 120px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  overflow: hidden;
-}
 table.errs td.app .environment {
   font-size: 0.8em;
   color: #999;
 }
-table.errs td.message a {
-  display: block;
-  word-wrap: break-word;
-  width: 410px;
+table.errs {
+  width: 100%;
+}
+table.errs td.narrow-as-possible {
+  width: 1px;
   white-space: nowrap;
-  text-overflow: ellipsis;
+}
+table.errs .nowrap {
+  white-space: nowrap;
+}
+/**
+ * td-container is useful for getting overflowing text to hide in a fluid-width
+ * table without having to set static widths on each column
+ */
+table.errs .td-container {
+  width: 0;
+  min-width: 100%;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+table.errs .count .td-container {
+  width: auto;
+}
+table.errs .count-header {
+  text-align: center;
 }
 table.errs td.message em {
   color: #727272;
   font-size: 0.9em;
 }
-
 table.errs tr.resolved td > * {
   opacity: 0.5;
   -moz-opacity: 0.5;

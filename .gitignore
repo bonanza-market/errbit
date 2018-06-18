@@ -18,4 +18,5 @@ bundle
 coverage
 *#
 .ruby-version
+.tool-versions
 NOTES

@@ -2,6 +2,7 @@
 # reported as various Errs, but the user has grouped the
 # Errs together as belonging to the same problem.
 
+# rubocop:disable Metrics/ClassLength. At some point we need to break up this class, but I think it doesn't have to be right now.
 class Problem
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -62,6 +63,7 @@ class Problem
   scope :unresolved, -> { where(resolved: false) }
   scope :ordered, -> { order_by(:last_notice_at.desc) }
   scope :for_apps, ->(apps) { where(:app_id.in => apps.all.map(&:id)) }
+  scope :search, ->(value) { where('$text' => { '$search' => value }) }
 
   def self.all_else_unresolved(fetch_all)
     if fetch_all
@@ -217,6 +219,7 @@ class Problem
   def self.ordered_by(sort, order)
     case sort
     when "app"            then order_by(["app_name", order])
+    when "environment"    then order_by(["environment", order])
     when "message"        then order_by(["message", order])
     when "last_notice_at" then order_by(["last_notice_at", order])
     when "count"          then order_by(["notices_count", order])
@@ -234,13 +237,9 @@ class Problem
     (app.issue_tracker_configured? && app.issue_tracker.type_tracker) || nil
   end
 
-  def self.search(value)
-    Problem.where('$text' => { '$search' => value })
-  end
-
 private
 
-  def attribute_count_descrease(name, value)
+  def attribute_count_decrease(name, value)
     counter = send(name)
     index = attribute_index(value)
     if counter[index] && counter[index]['count'] > 1
@@ -255,3 +254,4 @@ private
     Digest::MD5.hexdigest(value.to_s)
   end
 end
+# rubocop:enable Metrics/ClassLength

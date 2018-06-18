@@ -114,6 +114,12 @@ describe ProblemsController, type: 'controller' do
       expect(controller.problems).to include(@problem1)
       expect(controller.problems).to_not include(@problem2)
     end
+
+    it "works when given string is empty" do
+      get :search, search: ""
+      expect(controller.problems).to include(@problem1)
+      expect(controller.problems).to include(@problem2)
+    end
   end
 
   describe "GET /apps/:app_id/problems/:id" do
@@ -134,6 +140,16 @@ describe ProblemsController, type: 'controller' do
     it "successfully render page" do
       get :show, app_id: app.id, id: err.problem.id
       expect(response).to be_success
+    end
+
+    context "when rendering views" do
+      render_views
+
+      it "successfully renders the view even when there are no notices attached to the problem" do
+        expect(err.problem.notices).to be_empty
+        get :show, app_id: app.id, id: err.problem.id
+        expect(response).to be_success
+      end
     end
 
     context 'pagination' do
@@ -427,7 +443,7 @@ describe ProblemsController, type: 'controller' do
 
       it "should display a message" do
         put :destroy_all, app_id: @app.id
-        expect(request.flash[:success]).to match(/been deleted/)
+        expect(request.flash[:success]).to match(/be deleted/)
       end
 
       it "should redirect back to the app page" do

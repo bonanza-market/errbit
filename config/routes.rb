@@ -51,7 +51,14 @@ Rails.application.routes.draw do
     member do
       post :regenerate_api_key
     end
+    collection do
+      get :search
+    end
   end
+
+  get 'health/readiness' => 'health#readiness'
+  get 'health/liveness' => 'health#liveness'
+  get 'health/api-key-tester' => 'health#api_key_tester'
 
   namespace :api do
     namespace :v1 do

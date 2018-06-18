@@ -23,6 +23,7 @@ Errbit::Config = Configurator.run(
   per_app_notify_at_notices: ['ERRBIT_PER_APP_NOTIFY_AT_NOTICES'],
   log_location:              ['ERRBIT_LOG_LOCATION'],
   log_level:                 ['ERRBIT_LOG_LEVEL'],
+  notice_deprecation_days:   ['ERRBIT_PROBLEM_DESTROY_AFTER_DAYS'],
 
   serve_static_assets:       ['SERVE_STATIC_ASSETS'],
   secret_key_base:           ['SECRET_KEY_BASE'],
@@ -41,9 +42,12 @@ Errbit::Config = Configurator.run(
   github_site_title:         ['GITHUB_SITE_TITLE'],
   # google
   google_authentication:     ['GOOGLE_AUTHENTICATION'],
+  google_auto_provision:     ['GOOGLE_AUTO_PROVISION'],
   google_site_title:         ['GOOGLE_SITE_TITLE'],
   google_client_id:          ['GOOGLE_CLIENT_ID'],
   google_secret:             ['GOOGLE_SECRET'],
+  google_redirect_uri:       ['GOOGLE_REDIRECT_URI'],
+  google_authorized_domains: ['GOOGLE_AUTHORIZED_DOMAINS'],
 
   email_delivery_method:     ['EMAIL_DELIVERY_METHOD', lambda do |values|
     values[:email_delivery_method] && values[:email_delivery_method].to_sym
@@ -53,6 +57,8 @@ Errbit::Config = Configurator.run(
   smtp_address:              ['SMTP_SERVER'],
   smtp_port:                 ['SMTP_PORT'],
   smtp_authentication:       ['SMTP_AUTHENTICATION'],
+  smtp_enable_starttls_auto: ['SMTP_ENABLE_STARTTLS_AUTO'],
+  smtp_openssl_verify_mode:  ['SMTP_OPENSSL_VERIFY_MODE'],
   smtp_user_name:            %w(SMTP_USERNAME SENDGRID_USERNAME),
   smtp_password:             %w(SMTP_PASSWORD SENDGRID_PASSWORD),
   smtp_domain:               ['SMTP_DOMAIN', 'SENDGRID_DOMAIN', lambda do |values|

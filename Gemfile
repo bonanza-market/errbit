@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-RAILS_VERSION = '~> 4.2.5.2'
+RAILS_VERSION = '~> 4.2.9'
 
 send :ruby, ENV['GEMFILE_RUBY_VERSION'] if ENV['GEMFILE_RUBY_VERSION']
 
@@ -9,8 +9,8 @@ gem 'actionpack', RAILS_VERSION
 gem 'railties', RAILS_VERSION
 
 gem 'actionmailer_inline_css'
-gem 'decent_exposure', '~> 2.3.3'
-gem 'devise', '~> 3.5.5'
+gem 'decent_exposure'
+gem 'devise', '~> 4.4.0'
 gem 'dotenv-rails'
 gem 'draper'
 gem 'errbit_plugin'
@@ -66,27 +66,28 @@ group :development, :test do
 end
 
 group :development do
-  gem 'capistrano',           require: false
-  gem 'capistrano-bundler',   require: false
-  gem 'capistrano-passenger', require: false
-  gem 'capistrano-rails',     require: false
-  gem 'capistrano-rvm',       require: false
-
-  # better errors
+  gem 'capistrano',         require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-rbenv',   require: false
+  gem 'capistrano-rvm',     require: false
+  gem 'capistrano3-puma',   require: false
   gem 'better_errors'
   gem 'binding_of_caller', platform: 'ruby'
   gem 'meta_request'
 end
 
 group :test do
-  gem 'rspec', '~> 3.3'
-  gem 'rspec-rails', '~> 3.0', require: false
+  gem 'rake'
+  gem 'rspec', '~> 3.5'
+  gem 'rspec-rails', '~> 3.5', require: false
   gem 'rspec-activemodel-mocks'
   gem 'rspec-its'
   gem 'mongoid-rspec', '~> 3.0.0', require: false
   gem 'fabrication'
   gem 'capybara'
   gem 'poltergeist'
+  gem 'phantomjs'
   gem 'launchy'
   gem 'email_spec'
   gem 'timecop'
@@ -97,8 +98,11 @@ group :heroku, :production do
   gem 'rails_12factor', require: ENV.key?("HEROKU")
 end
 
+group :no_docker, :test, :development do
+  gem 'therubyracer', platform: :ruby # C Ruby (MRI) or Rubinius, but NOT Windows
+end
+
 gem 'puma'
-gem 'therubyracer', platform: :ruby # C Ruby (MRI) or Rubinius, but NOT Windows
 gem 'sass-rails'
 gem 'uglifier'
 # We can't upgrade because not compatible to jquery >= 1.9.
@@ -106,6 +110,8 @@ gem 'uglifier'
 gem 'jquery-rails', '~> 2.1.4'
 gem 'pjax_rails'
 gem 'underscore-rails'
+
+gem 'sucker_punch'
 
 ENV['USER_GEMFILE'] ||= './UserGemfile'
 eval_gemfile ENV['USER_GEMFILE'] if File.exist?(ENV['USER_GEMFILE'])

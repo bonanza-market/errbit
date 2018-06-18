@@ -2,6 +2,7 @@ class BacktraceLineDecorator < Draper::Decorator
   EMPTY_STRING = ''.freeze
 
   def in_app?
+    return false if file.blank?
     file.match Backtrace::IN_APP_PATH
   end
 
@@ -14,7 +15,7 @@ class BacktraceLineDecorator < Draper::Decorator
   end
 
   def file
-    object[:file].to_s
+    object.try(:[], :file).to_s
   end
 
   def method
@@ -40,6 +41,7 @@ class BacktraceLineDecorator < Draper::Decorator
   end
 
   def path
+    return '' if file.blank?
     File.dirname(file).gsub(/^\.$/, '') + "/"
   end
 

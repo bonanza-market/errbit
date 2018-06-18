@@ -61,6 +61,15 @@ describe NoticeFingerprinter, type: 'model' do
       end
     end
 
+    context "two notices with no backtrace" do
+      it "has the same fingerprint" do
+        f1 = fingerprinter.generate('123', notice, nil)
+        f2 = fingerprinter.generate('123', notice, nil)
+
+        expect(f1).to eq(f2)
+      end
+    end
+
     context 'two notices differing only by an ID in the message' do
       let(:notice1) { Fabricate(:notice, message: 'Something happened ID=1') }
       let(:notice2) { Fabricate(:notice, message: 'Something happened ID=2') }

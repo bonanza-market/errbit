@@ -11,7 +11,7 @@ class User
   field :google_uid
   field :name
   field :admin, type: Boolean, default: false
-  field :per_page, type: Fixnum, default: PER_PAGE
+  field :per_page, type: Integer, default: PER_PAGE
   field :time_zone, default: "UTC"
 
   ## Devise field
@@ -45,6 +45,27 @@ class User
   if Errbit::Config.user_has_username
     field :username
     validates :username, presence: true
+  end
+
+  def self.valid_google_domain?(email)
+    return true if Errbit::Config.google_authorized_domains.nil?
+    match_data = /.+@(?<domain>.+)$/.match(email)
+    return false if match_data.nil?
+    Errbit::Config.google_authorized_domains.split(",").include?(match_data[:domain])
+  end
+
+  def self.create_from_google_oauth2(access_token)
+    data = access_token.info
+    user = User.where(email: data['email']).first
+
+    unless user
+      user = User.create(name:       data['name'],
+                         email:      data['email'],
+                         google_uid: access_token.uid,
+                         password:   Devise.friendly_token[0, 20]
+      )
+    end
+    user
   end
 
   def byname

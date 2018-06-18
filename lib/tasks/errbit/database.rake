@@ -23,6 +23,16 @@ namespace :errbit do
       puts "=== Cleared #{ResolvedProblemClearer.new.execute} resolved errors from the database."
     end
 
+  desc "Delete old errors from the database. (Useful for limited heroku databases)"
+  task clear_outdated: :environment do
+    require 'outdated_problem_clearer'
+    if Errbit::Config.notice_deprecation_days.present?
+      puts "=== Cleared #{OutdatedProblemClearer.new.execute} outdated errors from the database."
+    else
+      puts "=== ERRBIT_PROBLEM_DESTROY_AFTER_DAYS not set. Old problems will not be destroyed."
+    end
+  end
+
     desc "Delete old errors from the database."
     task :clear_old => :environment do
       require 'old_problem_clearer'
@@ -35,7 +45,7 @@ namespace :errbit do
       Err.create_indexes
       Err.all.each do |err|
         next if err.notices.count == 0 || err.app.nil?
-        
+
         fingerprint = ErrorReport.fingerprint_strategy.generate(err.notices.first, err.app.api_key)
         next if fingerprint == err.fingerprint
 
@@ -45,7 +55,7 @@ namespace :errbit do
           :environment => err.problem.environment,
           :fingerprint => fingerprint
         )
-        
+
         err.notices.each do |notice|
           notice.update_attribute(:err_id, new_err.id)
         end
@@ -54,7 +64,7 @@ namespace :errbit do
         if err.problem.notices_count == 0
           err.problem.destroy
         end
-        
+
         err.destroy
       end
     end

@@ -19,29 +19,29 @@ Airbrake, you can just point the `airbrake` gem to your Errbit server.
 <table>
   <tr>
     <td align="center">
-      <a href="http://errbit.github.com/errbit/images/apps.png" target="_blank" title="Apps">
-        <img src="http://errbit.github.com/errbit/images/apps_thumb.png" alt="Apps">
+      <a href="https://errbit.com/images/apps.png" target="_blank" title="Apps">
+        <img src="https://errbit.com/images/apps_thumb.png" alt="Apps">
       </a>
       <br />
       <em>Apps</em>
     </td>
     <td align="center">
-      <a href="http://errbit.github.com/errbit/images/app_errors.png" target="_blank" title="Errors">
-        <img src="http://errbit.github.com/errbit/images/app_errors_thumb.png" alt="Errors">
+      <a href="https://errbit.com/images/app_errors.png" target="_blank" title="Errors">
+        <img src="https://errbit.com/images/app_errors_thumb.png" alt="Errors">
       </a>
       <br />
       <em>Errors</em>
     </td>
     <td align="center">
-      <a href="http://errbit.github.com/errbit/images/error_summary.png" target="_blank" title="Error Summary">
-        <img src="http://errbit.github.com/errbit/images/error_summary_thumb.png" alt="Error Summary">
+      <a href="https://errbit.com/images/error_summary.png" target="_blank" title="Error Summary">
+        <img src="https://errbit.com/images/error_summary_thumb.png" alt="Error Summary">
       </a>
       <br />
       <em>Error Summary</em>
     </td>
     <td align="center">
-      <a href="http://errbit.github.com/errbit/images/error_backtrace.png" target="_blank" title="Error Backtraces">
-        <img src="http://errbit.github.com/errbit/images/error_backtrace_thumb.png" alt="Error Backtraces">
+      <a href="https://errbit.com/images/error_backtrace.png" target="_blank" title="Error Backtraces">
+        <img src="https://errbit.com/images/error_backtrace_thumb.png" alt="Error Backtraces">
       </a>
       <br />
       <em>Error Backtraces</em>
@@ -59,8 +59,8 @@ updates and notifications.
 
 The list of requirements to install Errbit are:
 
-* Ruby 2.1.0 or higher
-* MongoDB 2.6.0 or higher
+* Ruby 2.3.x-2.4.x (>= 2.5.x not yet supported)
+* MongoDB 3.2.x-3.4.x (>= 3.6.x not yet supported)
 
 Installation
 ------------
@@ -108,7 +108,7 @@ Authentication
 --------------
 ### Configuring GitHub authentication:
 * Set GITHUB_AUTHENTICATION=true
-* Register your instance of Errbit at https://github.com/settings/applications
+* Register your instance of Errbit at https://github.com/settings/applications/new
 
 If you host Errbit at errbit.example.com, you would fill in:
 
@@ -171,7 +171,7 @@ to your user account on your **Edit profile** page.
 
 ### Configuring LDAP authentication:
 
-* Set USER_HAS_USERNAME=true
+* Set ERRBIT_USER_HAS_USERNAME=true
 * Follow the instructions at
   https://github.com/cschiewek/devise_ldap_authenticatable to set up the
   devise_ldap_authenticatable gem.
@@ -252,7 +252,7 @@ Errbit can now display information about the user who experienced an error.
 This gives you the ability to ask the user for more information,
 and let them know when you've fixed the bug.
 
-The Airbrake gem will look for ```current_user``` or ```current_member```. By defailt it will only send the ```id``` of the user, to specify other attributes you can set ```config.user_attributes```. See [the Airbrake wiki for more information](https://github.com/airbrake/airbrake/wiki/Sending-current-user-information).
+The Airbrake gem will look for ```current_user``` or ```current_member```. By default it will only send the ```id``` of the user, to specify other attributes you can set ```config.user_attributes```. See [the Airbrake wiki for more information](https://github.com/airbrake/airbrake/wiki/Sending-current-user-information).
 
 If user information is received with an error report,
 it will be displayed under the *User Details* tab:

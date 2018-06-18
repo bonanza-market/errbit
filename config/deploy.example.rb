@@ -7,7 +7,7 @@
 # to ./docs/deployment/capistrano.md for more info
 
 # config valid only for current version of Capistrano
-lock '3.4.0'
+lock '3.4.1'
 
 set :application, 'errbit'
 set :repo_url, 'https://github.com/errbit/errbit.git'
@@ -37,7 +37,7 @@ set :linked_dirs, fetch(:linked_dirs, []) + %w(
 # set :rbenv_roles, :all
 
 namespace :errbit do
-  desc "Setup config files (first time setup)"
+  desc "Set up config files (first time setup)"
   task :setup do
     on roles(:app) do
       execute "mkdir -p #{shared_path}/config"
@@ -58,7 +58,7 @@ namespace :errbit do
 end
 
 namespace :db do
-  desc "Create and setup the mongo db"
+  desc "Create and set up the mongo db"
   task :setup do
     on roles(:db) do
       within current_path do

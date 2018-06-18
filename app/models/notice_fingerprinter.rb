@@ -21,15 +21,18 @@ class NoticeFingerprinter
     material << notice.action if action
     material << notice.environment_name if environment_name
 
-    if backtrace_lines < 0
-      material << backtrace.lines
-    else
-      material << backtrace.
-        lines.
-        compact.
-        map { |line| line.with_indifferent_access["file"].to_s }.
-        select { |line| line.start_with?("[PROJECT_ROOT]") }.
-        slice(0, backtrace_lines)
+    # Sometimes backtrace is nil
+    if backtrace
+      if backtrace_lines < 0
+        material << backtrace.lines
+      else
+        material << backtrace.
+          lines.
+          compact.
+          map { |line| line.with_indifferent_access["file"].to_s }.
+          select { |line| line.start_with?("[PROJECT_ROOT]") }.
+          slice(0, backtrace_lines)
+      end
     end
 
     Digest::MD5.hexdigest(material.map(&:to_s).join)
