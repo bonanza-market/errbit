@@ -4,9 +4,6 @@
 bundle
 coverage
 config/config.yml
-config/deploy.rb
-config/deploy
-config/mongoid.yml
 config/newrelic.yml
 db/*.sqlite3
 .DS_Store
