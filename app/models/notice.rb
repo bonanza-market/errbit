@@ -179,10 +179,10 @@ protected
   def truncate_excess_notices
     if problem && problem.notices.count > MAX_SAVED_PER_PROBLEM
       excess_records = problem.notices.count - MAX_SAVED_PER_PROBLEM
-      Rails.logger.info "Found #{ excess_records } notices past problem limit of #{ MAX_SAVED_PER_PROBLEM }. Destroying notices"
-      destoryable_notices = problem.notices.order(created_at: :asc).limit(excess_records).to_a
-      Rails.logger.info "Found #{ destoryable_notices.size } records to destroy"
-      destoryable_notices.each(&:destroy)
+      Rails.logger.info "#{ excess_records } notices exist past problem limit of #{ MAX_SAVED_PER_PROBLEM }. Querying for notices"
+      destroyable_notices = problem.notices.order(created_at: :asc).limit(excess_records).to_a
+      Rails.logger.info "Got #{ destroyable_notices.size } sorted records to destroy"
+      destroyable_notices.each(&:destroy)
       Rails.logger.info "Destruction complete"
     end
   end
