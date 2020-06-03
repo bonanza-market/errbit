@@ -29,7 +29,7 @@ set :linked_dirs, fetch(:linked_dirs, []) + %w(
 )
 
 # check out capistrano-rvm documentation
-set :rvm_ruby_version, 'ruby-2.3.5@errbit'
+set :rvm_ruby_version, 'ruby-2.4.10@errbit'
 
 namespace :errbit do
   desc "Setup config files (first time setup)"
