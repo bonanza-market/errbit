@@ -1,10 +1,6 @@
 set :stage, :app
 set :rails_env, "production"
 
-Airbrussh.configure do |config|
-  config.log_file = "log/deploy_app.log"
-end
-
 server 'misc1.bonanza.com', user: 'deployuser', roles: %w(app web), primary: true
 
 # if ENV["SILENT"] != "true"
