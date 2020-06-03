@@ -3,6 +3,7 @@ require 'recurse'
 class Notice
   MESSAGE_LENGTH_LIMIT = 1000
   MAX_SAVED_PER_PROBLEM = 3000
+  MAX_DELETES_PER_REQUEST = 100
 
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -180,8 +181,9 @@ protected
     if problem && problem.notices.count > MAX_SAVED_PER_PROBLEM
       excess_records = problem.notices.count - MAX_SAVED_PER_PROBLEM
       Rails.logger.info "#{ excess_records } notices exist past problem limit of #{ MAX_SAVED_PER_PROBLEM }. Querying for notices"
-      destroyable_notices = problem.notices.order(created_at: :asc).limit(excess_records).to_a
-      Rails.logger.info "Got #{ destroyable_notices.size } sorted records to destroy"
+      notices_to_destroy = [ MAX_DELETES_PER_REQUEST, excess_records ].min
+      destroyable_notices = problem.notices.order(created_at: :asc).limit(notices_to_destroy).to_a
+      Rails.logger.info "Got #{ destroyable_notices.size } sorted records to destroy among #{ excess_records } excess records"
 
       # WBH June 2020 sees at least a couple ways this could become more efficient:
       # 1. We could delete more than the minimal records every pass, so this wouldn't be invoked via every single incoming notice when a problem is > 3k
