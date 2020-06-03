@@ -182,6 +182,12 @@ protected
       Rails.logger.info "#{ excess_records } notices exist past problem limit of #{ MAX_SAVED_PER_PROBLEM }. Querying for notices"
       destroyable_notices = problem.notices.order(created_at: :asc).limit(excess_records).to_a
       Rails.logger.info "Got #{ destroyable_notices.size } sorted records to destroy"
+
+      # WBH June 2020 sees at least a couple ways this could become more efficient:
+      # 1. We could delete more than the minimal records every pass, so this wouldn't be invoked via every single incoming notice when a problem is > 3k
+      # 2. We could pass mongo the list of IDs directly for deletion (WBH has avoided in v1 out of fear of locking operation, possibility of AR callbacks we want to catch, and laziness)
+      # These were not pursued in the v1 implementation upon observation that even amidst a flurry of exceptions, the
+      # "delete one notice per incoming exception" method was able to process each incoming request in <100ms while finding and deleting a notice record
       destroyable_notices.each(&:destroy)
       Rails.logger.info "Destruction complete"
     end
