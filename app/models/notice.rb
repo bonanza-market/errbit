@@ -2,6 +2,7 @@ require 'recurse'
 
 class Notice
   MESSAGE_LENGTH_LIMIT = 1000
+  MAX_SAVED_PER_PROBLEM = 3000
 
   include Mongoid::Document
   include Mongoid::Timestamps
@@ -24,6 +25,7 @@ class Notice
   index(err_id: 1, created_at: 1, _id: 1)
 
   before_save :sanitize
+  after_create :truncate_excess_notices
   before_destroy :problem_recache
 
   validates :backtrace_id, :server_environment, :notifier, presence: true
@@ -79,7 +81,7 @@ class Notice
   def url
     request['url']
   end
-  
+
   def hostname
     server_environment && server_environment["hostname"] || host
   end
@@ -89,6 +91,17 @@ class Notice
     uri && uri.host || "N/A"
   rescue URI::InvalidURIError
     "N/A"
+  end
+
+  def to_curl
+    return "N/A" if url.blank?
+    headers = %w(Accept Accept-Encoding Accept-Language Cookie Referer User-Agent).each_with_object([]) do |name, h|
+      if (value = env_vars["HTTP_#{name.underscore.upcase}"])
+        h << "-H '#{name}: #{value}'"
+      end
+    end
+
+    "curl -X #{env_vars['REQUEST_METHOD'] || 'GET'} #{headers.join(' ')} #{url}"
   end
 
   def env_vars
@@ -160,6 +173,17 @@ protected
         end
         h
       end
+    end
+  end
+
+  def truncate_excess_notices
+    if problem && problem.notices.count > MAX_SAVED_PER_PROBLEM
+      excess_records = problem.notices.count - MAX_SAVED_PER_PROBLEM
+      Rails.logger.info "Found #{ excess_records } notices past problem limit of #{ MAX_SAVED_PER_PROBLEM }. Destroying notices"
+      destoryable_notices = problem.notices.order(created_at: :asc).limit(excess_records).to_a
+      Rails.logger.info "Found #{ destoryable_notices.size } records to destroy"
+      destoryable_notices.each(&:destroy)
+      Rails.logger.info "Destruction complete"
     end
   end
 end
