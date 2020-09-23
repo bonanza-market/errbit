@@ -2,8 +2,14 @@ class Backtrace
   include Mongoid::Document
   include Mongoid::Timestamps
 
-  IN_APP_PATH = %r{^\[PROJECT_ROOT\]/?}
-  GEMS_PATH = %r{\[GEM_ROOT\]\/gems\/([^\/]+)}
+  # For airbrake < 2.9.0
+  IN_APP_OLD_PATH = %r{^\[PROJECT_ROOT\]/?}
+  GEMS_OLD_PATH = %r{\[GEM_ROOT\]\/gems\/([^\/]+)}
+
+  # For airbrake >= 2.9.0
+  # See: https://github.com/errbit/errbit/issues/1477
+  IN_APP_NEW_PATH = %r{^\/PROJECT_ROOT\//?}
+  GEMS_NEW_PATH = %r{\/GEM_ROOT\/gems\/([^\/]+)}
 
   field :fingerprint
   field :lines
