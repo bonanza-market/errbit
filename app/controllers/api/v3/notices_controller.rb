@@ -24,7 +24,7 @@ class Api::V3::NoticesController < ApplicationController
     report.generate_notice!
     render status: 201, json: {
       id:  report.notice.id,
-      url: report.problem.url
+      url: report.problem ? report.problem.url : "[couldnt be calculated]"
     }
   rescue AirbrakeApi::ParamsError
     render text: 'Invalid request', status: 400

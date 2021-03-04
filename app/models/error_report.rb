@@ -82,7 +82,7 @@ class ErrorReport
 
   def should_email?
     app.email_at_notices.include?(0) ||
-      app.email_at_notices.include?(@problem.notices_count)
+      (@problem && app.email_at_notices.include?(@problem.notices_count))
   end
 
   # Send email notification if needed
